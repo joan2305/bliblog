@@ -12,10 +12,10 @@ export const store = new Vuex.Store({
     authors: [],
     currentPost: {},
     currentAuthor: {},
+    apiError: false,
   },
   getters: {
     appPosts: (state) => {
-      // console.log(state.posts.data)
       return state.posts
     },
     appPost: (state) => {
@@ -26,65 +26,44 @@ export const store = new Vuex.Store({
     },
     postAuthorId: (state) => {
       return state.currentPost.userId
-    }
-    // authorList:(state)=>{
-    //   return state.
-    // }
+    },
+    ifError: (state) => {
+      return state.apiError
+    },
   },
   actions: {
     fetchPosts: (state) => {
       axios
         .get("https://jsonplaceholder.typicode.com/posts")
         .then((response) => {
-          // console.log(response.data);
           state.commit("setPosts", response.data)
+          state.commit("setError", false)
         })
-        .catch((error) => {
-          console.log(error)
+        .catch(() => {
+          state.commit("setError", true)
         })
     },
     fetchPost: ({ commit }, postsId) => {
       axios
         .get(`https://jsonplaceholder.typicode.com/posts/${postsId}`)
         .then((response) => {
-          // console.log(response)
           commit("setPost", response.data)
+          commit("setError", false)
         })
-        .catch((error) => {
-          console.log(error)
+        .catch(() => {
+          commit("setError", true)
         })
     },
     fetchAuthor: ({ commit }, authorId) => {
-      console.log(authorId)
       axios
         .get(`https://jsonplaceholder.typicode.com/users/${authorId}`)
         .then((response) => {
-          console.log(response)
-
           commit("setAuthor", response.data)
+          commit("setError", false)
         })
         .catch((error) => {
           console.log(error)
-        })
-    },
-    fetchPostandAuthor: ({ commit }, postsId) => {
-      axios
-        .get(`https://jsonplaceholder.typicode.com/posts/${postsId}`)
-        .then((response) => {
-          console.log(response.data)
-          commit("setPost", response.data)
-          axios
-            .get(`https://jsonplaceholder.typicode.com/users/${response.data.userId}`)
-            .then((response) => {
-              console.log(response)
-              commit("setAuthor", response.data)
-            })
-            .catch((error) => {
-              console.log(error)
-            })
-        })
-        .catch((error) => {
-          console.log(error)
+          commit("setError", true)
         })
     },
   },
@@ -97,6 +76,9 @@ export const store = new Vuex.Store({
     },
     setAuthor(state, author) {
       state.currentAuthor = author
+    },
+    setError(state, value) {
+      state.apiError = value
     },
   },
 })

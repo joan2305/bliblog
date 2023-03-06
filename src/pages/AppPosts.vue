@@ -1,7 +1,10 @@
-<template lang="">
+<template>
   <div>
-    <template v-for="post in appPosts">
-      <div :key="post.id" class="d-flex justify-content-center">
+    <div v-if="ifError == true">
+      <div class="alert alert-primary" role="alert">There is an error while we fetch blogs, please try again later.</div>
+    </div>
+    <div v-else>
+      <div v-for="post in appPosts" v-bind:key="post.id" class="d-flex justify-content-center">
         <div class="card mb-3 mt-3" style="width: 40rem">
           <div class="card-body">
             <h5 class="card-title fw-bold">{{ post.title }}</h5>
@@ -10,23 +13,16 @@
           </div>
         </div>
       </div>
-    </template>
+    </div>
   </div>
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex"
-// import PostCard from "../components/PostCard.vue"
+
 export default {
   name: "app-posts",
-  components: {
-    // PostCard,
-  },
   computed: {
-    posts() {
-      console.log(this.$store.state.posts)
-      return this.$store.state.posts
-    },
-    ...mapGetters(["appPosts"]),
+    ...mapGetters(["appPosts", "ifError"]),
   },
   methods: {
     ...mapActions(["fetchPosts"]),
