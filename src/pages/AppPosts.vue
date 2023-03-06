@@ -8,6 +8,7 @@
         <div class="card mb-3 mt-3" style="width: 40rem">
           <div class="card-body">
             <h5 class="card-title fw-bold">{{ post.title }}</h5>
+            <p class="card-text">Author : {{ post.user.name }}</p>
             <p class="card-text">{{ post.body }}</p>
             <router-link exact :to="{ name: 'Post', params: { id: post.id } }"><a class="btn btn-primary">See Blog</a></router-link>
           </div>
@@ -25,10 +26,11 @@ export default {
     ...mapGetters(["appPosts", "ifError"]),
   },
   methods: {
-    ...mapActions(["fetchPosts"]),
+    ...mapActions(["fetchPosts", "fetchAuthors"]),
   },
   created() {
     this.fetchPosts()
+    this.fetchAuthors()
   },
 }
 </script>

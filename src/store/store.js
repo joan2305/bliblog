@@ -16,7 +16,16 @@ export const store = new Vuex.Store({
   },
   getters: {
     appPosts: (state) => {
-      return state.posts
+      const appPosts = state.posts.map(post => {
+        post.user = state.authors.find(author => {
+          return post.userId === author.id
+        })
+        return post
+      })
+      return appPosts
+    },
+    appAuthors: (state) => {
+      return state.authors
     },
     appPost: (state) => {
       return state.currentPost
@@ -65,6 +74,17 @@ export const store = new Vuex.Store({
           commit("setError", true)
         })
     },
+    fetchAuthors: ({ commit }) => {
+      axios
+        .get(`https://jsonplaceholder.typicode.com/users/`)
+        .then((response) => {
+          commit("setAuthors", response.data)
+          commit("setError", false)
+        })
+        .catch(() => {
+          commit("setError", true)
+        })
+    },
   },
   mutations: {
     setPosts(state, posts) {
@@ -78,6 +98,9 @@ export const store = new Vuex.Store({
     },
     setError(state, value) {
       state.apiError = value
+    },
+    setAuthors(state, value) {
+      state.authors = value
     },
   },
 })
