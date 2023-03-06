@@ -61,8 +61,7 @@ export const store = new Vuex.Store({
           commit("setAuthor", response.data)
           commit("setError", false)
         })
-        .catch((error) => {
-          console.log(error)
+        .catch(() => {
           commit("setError", true)
         })
     },
