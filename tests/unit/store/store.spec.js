@@ -7,6 +7,7 @@ import axios from "axios"
 jest.mock("axios", () => ({
   get: jest.fn(),
 }))
+
 // jest.mock("axios")
 
 describe("store.js", () => {
@@ -51,7 +52,7 @@ describe("store.js", () => {
       username: "Brets",
       email: "Sinceres@april.biz",
     },
-    apiError: false,
+    errorText: "",
   }
 
   it("getters", () => {
@@ -107,7 +108,7 @@ describe("store.js", () => {
       username: "Brets",
       email: "Sinceres@april.biz",
     })
-    expect(store.getters.ifError(state)).toEqual(false)
+    expect(store.getters.errorText(state)).toEqual("")
   })
 
   it("mutations setPosts", () => {
@@ -184,18 +185,14 @@ describe("store.js", () => {
     store.mutations.setAuthor(state, value)
     expect(state.currentAuthor).toEqual(value)
   })
-  it("mutations setError", () => {
-    const value = false
+  it("mutations setErrorText", () => {
+    const value = "Request failed with status code 404"
     const state = {
-      apiError: false,
+      errorText: "",
     }
 
-    store.mutations.setError(state, value)
-    expect(state.apiError).toEqual(value)
-
-    const value2 = true
-    store.mutations.setError(state, value2)
-    expect(state.apiError).toEqual(value2)
+    store.mutations.setErrorText(state, value)
+    expect(state.errorText).toEqual(value)
   })
 
   it("is successful actions fetchPosts ", async () => {
@@ -214,22 +211,20 @@ describe("store.js", () => {
         userId: 1,
       },
     ]
-    axios.get.mockImplementation(()=>Promise.resolve({data:response}))
+    axios.get.mockImplementation(() => Promise.resolve({ data: response }))
     await store.actions.fetchPosts({ commit })
     expect(axios.get).toHaveBeenCalledWith("https://jsonplaceholder.typicode.com/posts")
     expect(commit).toHaveBeenCalledWith("setPosts", response)
-    expect(commit).toHaveBeenCalledWith("setError", false)
   })
 
-  it("sets error state when unsuccessful", async () => {
+  it("should handle errors when fetching posts", async () => {
     const commit = jest.fn()
-    const err = new Error('Wrong inputs passed in');
-    axios.get.mockImplementation(()=>
-      Promise.reject()
-    )
+    const err = "Request failed with status code 404"
 
+    axios.get.mockRejectedValue(new Error(err))
     await store.actions.fetchPosts({ commit })
-    expect(commit).toHaveBeenCalledWith("setError", true)
+    await Promise.resolve()
+    expect(commit).toHaveBeenCalledWith("setErrorText", err)
   })
 
   it("is successful actions fetchAuthors ", async () => {
@@ -248,11 +243,20 @@ describe("store.js", () => {
         email: "josandre@yahoo.com",
       },
     ]
-    axios.get.mockImplementation(()=>Promise.resolve({data:response}))
+    axios.get.mockImplementation(() => Promise.resolve({ data: response }))
     await store.actions.fetchAuthors({ commit })
     expect(axios.get).toHaveBeenCalledWith("https://jsonplaceholder.typicode.com/users")
     expect(commit).toHaveBeenCalledWith("setAuthors", response)
-    expect(commit).toHaveBeenCalledWith("setError", false)
+  })
+
+  it("should handle errors when fetching authors", async () => {
+    const commit = jest.fn()
+    const err = "Request failed with status code 404"
+
+    axios.get.mockRejectedValue(new Error(err))
+    await store.actions.fetchAuthors({ commit })
+    await Promise.resolve()
+    expect(commit).toHaveBeenCalledWith("setErrorText", err)
   })
 
   it("is successful actions fetchPost ", async () => {
@@ -264,11 +268,19 @@ describe("store.js", () => {
       title: "Title 1",
       userId: 1,
     }
-    axios.get.mockImplementation(()=>Promise.resolve({data:response}))
+    axios.get.mockImplementation(() => Promise.resolve({ data: response }))
     await store.actions.fetchPost({ commit }, postId)
     expect(axios.get).toHaveBeenCalledWith(`https://jsonplaceholder.typicode.com/posts/${postId}`)
     expect(commit).toHaveBeenCalledWith("setPost", response)
-    expect(commit).toHaveBeenCalledWith("setError", false)
+  })
+  it("should handle errors when fetching post", async () => {
+    const commit = jest.fn()
+    const err = "Request failed with status code 404"
+
+    axios.get.mockRejectedValue(new Error(err))
+    await store.actions.fetchPost({ commit })
+    await Promise.resolve()
+    expect(commit).toHaveBeenCalledWith("setErrorText", err)
   })
   it("is successful actions fetchAuthor ", async () => {
     const commit = jest.fn()
@@ -279,10 +291,18 @@ describe("store.js", () => {
       username: "Brets",
       email: "Sinceres@april.biz",
     }
-    axios.get.mockImplementation(()=>Promise.resolve({data:response}))
+    axios.get.mockImplementation(() => Promise.resolve({ data: response }))
     await store.actions.fetchAuthor({ commit }, authorId)
     expect(axios.get).toHaveBeenCalledWith(`https://jsonplaceholder.typicode.com/users/${authorId}`)
     expect(commit).toHaveBeenCalledWith("setAuthor", response)
-    expect(commit).toHaveBeenCalledWith("setError", false)
+  })
+  it("should handle errors when fetching author", async () => {
+    const commit = jest.fn()
+    const err = "Request failed with status code 404"
+
+    axios.get.mockRejectedValue(new Error(err))
+    await store.actions.fetchAuthor({ commit })
+    await Promise.resolve()
+    expect(commit).toHaveBeenCalledWith("setErrorText", err)
   })
 })

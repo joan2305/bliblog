@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for components/NavBar.vue</title>
+    <title>Code coverage report for pages/AppPost.vue</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,20 +19,20 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">components</a> NavBar.vue</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">pages</a> AppPost.vue</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
@@ -97,7 +97,15 @@
 <a name='L32'></a><a href='#L32'>32</a>
 <a name='L33'></a><a href='#L33'>33</a>
 <a name='L34'></a><a href='#L34'>34</a>
-<a name='L35'></a><a href='#L35'>35</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">6x</span>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -117,7 +125,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -131,40 +138,57 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&lt;template lang=""&gt;
-  &lt;header&gt;
-    &lt;nav class="navbar navbar-expand-lg" :style="{ background: bgSecondary }"&gt;
-      &lt;div class="container"&gt;
-        &lt;a class="navbar-brand" href="#"&gt;BliBlog&lt;/a&gt;
-        &lt;div class="collapse navbar-collapse" id="navbarSupportedContent"&gt;
-          &lt;ul class="navbar-nav me-auto mb-2 mb-lg-0"&gt;
-            &lt;li class="nav-item"&gt;
-              &lt;router-link class="nav-link active" to="/"&gt;&lt;a aria-current="page"&gt;Blogs&lt;/a&gt;&lt;/router-link&gt;
-            &lt;/li&gt;
-            
-          &lt;/ul&gt;
-          &lt;!-- &lt;form class="d-flex" role="search"&gt;
-            &lt;input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" /&gt;
-            &lt;button class="btn btn-outline-dark" type="submit"&gt;Search&lt;/button&gt;
-          &lt;/form&gt; --&gt;
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&lt;template&gt;
+  &lt;div class="d-flex justify-content-center mt-5"&gt;
+    &lt;div v-if="errorText"&gt;
+      &lt;div class="alert alert-primary error-alert" role="alert"&gt;{{ errorText }}&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div v-else&gt;
+      &lt;div class="card" style="width: 30rem"&gt;
+        &lt;div class="card-body"&gt;
+          &lt;h5 class="card-title"&gt;{{ appPost.title }}&lt;/h5&gt;
+          &lt;h6 class="card-subtitle mb-2 text-muted card-author"&gt;By {{ appAuthor.name }}&lt;/h6&gt;
+          &lt;p class="card-text card-content"&gt;{{ appPost.body }}&lt;/p&gt;
+          &lt;h6 class="card-subtitle text-decoration-none d-flex flex-start mb-2 text-muted card-username"&gt;Author username : {{ appAuthor.username }}&lt;/h6&gt;
         &lt;/div&gt;
       &lt;/div&gt;
-    &lt;/nav&gt;
-  &lt;/header&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
 &lt;/template&gt;
 &lt;script&gt;
+import { mapActions, mapGetters } from "vuex"
 export default {
-  name: "nav-bar",
-  data() {
-    return {
-      bgSecondary: "#E0B4A4",
-    }
+  name: "app-post",
+  props: {
+    id: String,
+    authorId: String,
   },
-  computed: {},
-  methods: {},
+  computed: {
+    ...mapGetters(["appPost", "appAuthor", "errorText"]),
+  },
+  methods: {
+    ...mapActions(["fetchPost", "fetchAuthor"]),
+  },
+  created() {
+    this.fetchPost(this.id)
+  },
+  watch: {
+    appPost(value) {
+      this.fetchAuthor(value.userId)
+    },
+  },
 }
 &lt;/script&gt;
-&lt;style scoped&gt;&lt;/style&gt;
+&lt;style lang=""&gt;&lt;/style&gt;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

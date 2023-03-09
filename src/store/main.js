@@ -5,7 +5,7 @@ export const state = {
   authors: [],
   currentPost: {},
   currentAuthor: {},
-  apiError: false,
+  errorText: "",
 }
 
 export const getters = {
@@ -27,8 +27,8 @@ export const getters = {
   appAuthor: (state) => {
     return state.currentAuthor
   },
-  ifError: (state) => {
-    return state.apiError
+  errorText: (state) => {
+    return state.errorText
   },
 }
 
@@ -42,25 +42,23 @@ export const mutations = {
   setAuthor(state, author) {
     state.currentAuthor = author
   },
-  setError(state, value) {
-    state.apiError = value
-  },
   setAuthors(state, value) {
     state.authors = value
+  },
+  setErrorText(state, value) {
+    state.errorText = value
   },
 }
 
 export const actions = {
-  fetchPosts: (state) => {
+  fetchPosts: ({ commit }) => {
     axios
       .get("https://jsonplaceholder.typicode.com/posts")
       .then((response) => {
-        state.commit("setPosts", response.data)
-        state.commit("setError", false)
+        commit("setPosts", response.data)
       })
-      .catch(() => {
-        state.commit("setError", true)
-        // console.log(state.apiError)
+      .catch((error) => {
+        commit("setErrorText", error.message)
       })
   },
   fetchPost: ({ commit }, postsId) => {
@@ -68,10 +66,9 @@ export const actions = {
       .get(`https://jsonplaceholder.typicode.com/posts/${postsId}`)
       .then((response) => {
         commit("setPost", response.data)
-        commit("setError", false)
       })
-      .catch(() => {
-        commit("setError", true)
+      .catch((error) => {
+        commit("setErrorText", error.message)
       })
   },
   fetchAuthor: ({ commit }, authorId) => {
@@ -79,10 +76,9 @@ export const actions = {
       .get(`https://jsonplaceholder.typicode.com/users/${authorId}`)
       .then((response) => {
         commit("setAuthor", response.data)
-        commit("setError", false)
       })
-      .catch(() => {
-        commit("setError", true)
+      .catch((error) => {
+        commit("setErrorText", error.message)
       })
   },
   fetchAuthors: ({ commit }) => {
@@ -90,10 +86,9 @@ export const actions = {
       .get(`https://jsonplaceholder.typicode.com/users`)
       .then((response) => {
         commit("setAuthors", response.data)
-        commit("setError", false)
       })
-      .catch(() => {
-        commit("setError", true)
+      .catch((error) => {
+        commit("setErrorText", error.message)
       })
   },
 }

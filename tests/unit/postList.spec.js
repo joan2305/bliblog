@@ -19,6 +19,9 @@ describe("AppPosts.vue", () => {
     getters = {
       appPosts: (state) => state.appPosts,
       ifError: (state) => state.apiError,
+      errorText: (state) => {
+        state.errorText
+      },
     }
     actions = {
       fetchPosts: jest.fn(),
@@ -26,6 +29,7 @@ describe("AppPosts.vue", () => {
     }
     state = {
       apiError: false,
+      errorText: "Request failed with status code 404",
       appPosts: [
         {
           userId: 1,
@@ -94,6 +98,9 @@ describe("AppPosts.vue", () => {
       setAuthors: (state, value) => {
         state.authors = value
       },
+      setErrorText: (state, value) => {
+        state.errorText = value
+      },
     }
     store = new Vuex.Store({
       state,
@@ -109,6 +116,7 @@ describe("AppPosts.vue", () => {
 
   it("calls created", async () => {
     const fetchPosts = jest.spyOn(AppPosts.methods, "fetchPosts")
+
     const fetchAuthors = jest.spyOn(AppPosts.methods, "fetchAuthors")
     const wrapper = shallowMount(AppPosts, {
       localVue,
@@ -152,7 +160,8 @@ describe("AppPosts.vue", () => {
             userId: 1,
           },
         ],
-        apiError:false
+        apiError: false,
+        errorText:()=> ("")
       },
     })
     await wrapper.vm.$nextTick()
@@ -162,15 +171,15 @@ describe("AppPosts.vue", () => {
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed eros pellentesque, interdum felis vitae, porta nisi. Nam sed posuere eros, sit amet consequat nulla. Integer convallis sapien interdum, elementum nisl eu, pharetra ipsum. Praesent iaculis pellentesque felis. Nam nec tempus quam. Nam bibendum dictum lectus. Vestibulum maximus bibendum facilisis. Pellentesque porta metus vel tellus mattis, quis rhoncus dolor egestas. Donec id finibus nisi. Sed ut rutrum ipsum, ut congue tellus."
     )
   })
-  it('sets error computed propery', async()=>{
+  it("sets error computed property true", async () => {
     const wrapper = shallowMount(AppPosts, {
       localVue,
       store,
-      computed:{
-        ifError:()=>true
-      }
+      computed: {
+        errorText:()=> ("Request failed with status code 404"),
+      },
     })
     await wrapper.vm.$nextTick()
-    expect(wrapper.find('.error-alert').text()).toBe("There is an error while we fetch blogs, please try again later.")
+    expect(wrapper.find(".error-alert").text()).toBe("Request failed with status code 404")
   })
 })
